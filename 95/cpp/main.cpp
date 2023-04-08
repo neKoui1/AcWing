@@ -1,34 +1,70 @@
 #include<iostream>
+#include<cstring>
+#include<string>
+#include<cstdio>
+#include<algorithm>
+
 using namespace std;
 
-const int N = 16;
-int n;
-int status[16];
+const int N = 6;
+char g[N][N], backup[N][N];
+int dx[5] = {-1, 0, 1, 0, 0};
+int dy[5] = {0, 1 ,0, -1, 0};
 
-void backtracking(int u) {
-    if (u > n) {
-        for ( int i = 1; i <= n ; i++ ){
-            if (status[i] == 1 ) {
-                cout << i << " ";
-            }
+void turn(int x, int y) {
+    for ( int i = 0 ; i < 5; i++ ) {
+        int a = x + dx[i];
+        int b = y + dy[i];
+        if ( a < 0 || a >=5 || b < 0 || b >= 5 ) {
+            continue;
         }
-        cout << endl;
-        return ;
+        g[a][b] ^= 1;
     }
-
-    status[u] = 2;
-    backtracking(u+1);
-    status[u] = 0;
-
-    status[u] = 1;
-    backtracking(u+1);
-    status[u] = 0;
 }
 
 int main() {
+    int T = 0;
+    cin >> T;
+    while ( T-- ) {
+        for ( int i = 0 ; i < 5; i++ ) {
+            cin >> g[i];
+        }
+        int res = 10;
+        for ( int op = 0 ; op < 32 ; op ++ ) {
+            memcpy(backup, g, sizeof g);
+            int step = 0;
+            for ( int i = 0 ; i < 5 ; i++ ) {
+                if ( op >> i & 1 ) {
+                    step ++;
+                    turn(0,i);
+                }
+            }
+            for ( int i = 0 ; i < 4 ; i++ ) {
+                for ( int j = 0 ; j < 5 ; j++ ) {
+                    if ( g[i][j] == '0' ) {
+                        step++;
+                        turn(i+1, j);
+                    }
+                }
+            }
+            bool dark = false;
+            for ( int i = 0 ; i < 5 ; i++ ) {
+                if( g[4][i] == '0') {
+                    dark = true;
+                    break;
+                }
+            }
+            if(!dark) {
+                res = min(res,step);
+            }
+            memcpy(g, backup, sizeof g);
+        }
 
-    cin >> n;
-    backtracking(1);
-    
+        if ( res > 6 ) {
+            res = -1;
+        }
+        cout << res << endl;
+    }
+
     return 0;
 }
