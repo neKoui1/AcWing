@@ -1,12 +1,23 @@
-let x = 3
-let name = "123"
+let fs = require('fs')
+let buf = '';
 
-function print() {
-    console.log("Hello, World!");
-}
+process.stdin.on('readable', function() {
+    let chunk = process.stdin.read()
+    if (chunk) {
+        buf += chunk.toString()
+    }
+})
 
-export {
-    print,
-    x,
-    name,
-}
+process.stdin.on('end', function() {
+    buf.split('\n').forEach(function(line) {
+        let tokens = line.split(' ').map(function(x) {
+            return parseInt(x)
+        })
+        if (tokens.length != 2) {
+            return
+        }
+        console.log(tokens.reduce(function(a, b) {
+            return a + b
+        }))
+    })
+})
