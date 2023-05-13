@@ -16,7 +16,7 @@ int LeftBorderBinarySearch(vector<int>& nums, int target) {
 }
 
 int main() {
-    vector<int> a = {1, 2, 2, 3, 3, 4};
+    vector<int> a = {1, 2, 2, 3, 3, 4, 6};
     cout << LeftBorderBinarySearch(a, 3) << endl;
 
     return 0;
